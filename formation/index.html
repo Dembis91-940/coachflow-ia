@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace formation — CoachFlow IA</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="../index.html">Coach<span class="dash">Flow</span> IA</a>
+    <nav class="nav-links">
+      <a href="../index.html">← Page de vente</a>
+      <a class="btn ghost small" href="../paiement.html">Acheter</a>
+    </nav>
+  </div>
+</header>
+
+<div class="deck-header">
+  <div class="wrap">
+    <div class="crumb"><a href="../index.html">CoachFlow IA</a> / Espace formation</div>
+    <h1>Votre espace formation</h1>
+    <div class="meta">
+      <span>📚 <b>4 modules · 54 min</b> de vidéo</span>
+      <span>🤖 <b>4 agents</b> prêts à copier</span>
+      <span>🚀 <b>Objectif :</b> votre suivi client automatisé en 1 journée</span>
+    </div>
+  </div>
+</div>
+
+<section style="padding:50px 0 80px">
+  <div class="wrap gate">
+
+    <!-- Contenu visible seulement si acheté (ou démo déverrouillée) -->
+    <div id="gate-locked">
+      <div class="locked">
+        <div class="lock">🔒</div>
+        <h2 style="font-size:22px;margin:12px 0 8px">Cet espace est réservé aux participants</h2>
+        <p class="muted" style="max-width:460px;margin:0 auto 22px">La formation s'ouvre après confirmation de votre commande. Déjà participant ? Votre accès se déverrouille automatiquement après le paiement.</p>
+        <a class="btn accent" href="../paiement.html">J'achète la formation — 47 €</a>
+        <div style="margin-top:14px">
+          <button class="btn ghost small" id="btn-unlock-demo" type="button">Mode démo : déverrouiller l'accès (sans achat)</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="gate-open" style="display:none">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:26px">
+        <span class="pill">✓ Accès confirmé</span>
+        <span class="muted" style="font-size:13.5px">Bienvenue ! Par ici pour reprendre votre temps. 💪</span>
+      </div>
+
+      <div class="prog-list">
+        <a class="prog" href="module-1.html" style="text-decoration:none;color:inherit">
+          <div class="num">01</div>
+          <div>
+            <div class="meta">12 min · Vidéo + slides + script</div>
+            <h3>Pourquoi l'IA va transformer votre cabinet</h3>
+            <p>Le constat, ce que l'IA sait faire aujourd'hui, la méthode CoachFlow et les bonnes pratiques de sécurité. Le socle de tout le reste.</p>
+          </div>
+        </a>
+        <a class="prog" href="module-2.html" style="text-decoration:none;color:inherit">
+          <div class="num">02</div>
+          <div>
+            <div class="meta">14 min · Agent n°1 inclus</div>
+            <h3>L'agent Compte-rendu de séance</h3>
+            <p>Dictée de 30 secondes → compte-rendu structuré envoyé au client. Variantes kiné / coach, personnalisation en 5 minutes.</p>
+          </div>
+        </a>
+        <a class="prog" href="module-3.html" style="text-decoration:none;color:inherit">
+          <div class="num">03</div>
+          <div>
+            <div class="meta">13 min · Agent n°2 inclus</div>
+            <h3>L'agent Relance client</h3>
+            <p>Le séquencement J+1 / J+3 / J+7, le ton qui ramène sans insister, et 6 situations types du métier.</p>
+          </div>
+        </a>
+        <a class="prog" href="module-4.html" style="text-decoration:none;color:inherit">
+          <div class="num">04</div>
+          <div>
+            <div class="meta">15 min · Agents n°3 et n°4 inclus</div>
+            <h3>Plan de séance personnalisé + système complet</h3>
+            <p>Plans sur mesure en 30 secondes, onboarding des nouveaux clients, et la journée d'installation pas à pas.</p>
+          </div>
+        </a>
+      </div>
+
+      <h2 style="margin:44px 0 4px;font-size:24px">🤖 Vos 4 agents (fichiers .md)</h2>
+      <p class="muted" style="font-size:14px;margin-bottom:18px">Copiez-collez dans ChatGPT ou Claude. Guide d'utilisation inclus.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <a class="tpl-file" href="../templates-agents/01-compte-rendu-seance.md">📄 Agent Compte-rendu</a>
+        <a class="tpl-file" href="../templates-agents/02-relance-client.md">📄 Agent Relance</a>
+        <a class="tpl-file" href="../templates-agents/03-plan-seance-personnalise.md">📄 Agent Plan de séance</a>
+        <a class="tpl-file" href="../templates-agents/04-onboarding-nouveau-client.md">📄 Agent Onboarding</a>
+        <a class="tpl-file" href="../templates-agents/README.md">📖 Guide d'utilisation</a>
+      </div>
+
+      <div class="exercise" style="margin-top:34px">
+        <h4>📅 Votre plan d'action de la semaine</h4>
+        <p><b>Jour 1 :</b> module 1 + 2, premier compte-rendu généré · <b>Jour 2 :</b> module 3, première relance envoyée · <b>Jour 3 :</b> module 4, journée d'installation · <b>Vendredi 17h :</b> créneau relances (10 min). C'est tout. Le reste, c'est votre métier.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div>© 2026 CoachFlow IA</div>
+    <div><a href="../index.html">Page de vente</a></div>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
