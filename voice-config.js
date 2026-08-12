@@ -1,0 +1,1 @@
+window.VOICE_CONFIG = {"publicKey": null, "assistantId": "fdf17127-64a0-4f7f-8e30-5ce0cb9f37b5", "accent": "#16a34a"};
