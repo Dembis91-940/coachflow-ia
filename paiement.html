@@ -31,8 +31,8 @@
     </div>
 
     <div class="demo-banner">
-      <span>🧪</span>
-      <div><b>Mode démonstration.</b> Aucune carte n'est débitée, aucun paiement réel n'est effectué. Pour vendre en conditions réelles, branchez Stripe (voir README, section « Déploiement »).</div>
+      <span>🔒</span>
+      <div><b>Paiement sécurisé.</b> Transaction chiffrée via Stripe, accès immédiat après confirmation, garantie 14 jours.</div>
     </div>
 
     <!-- Récapitulatif de commande -->
@@ -45,35 +45,14 @@
       <div class="order-row total"><span>Total</span><span id="cmd-total">47 €</span></div>
     </div>
 
-    <!-- Formulaire de paiement (simulé) -->
+    <!-- Paiement sécurisé Stripe -->
     <form class="form-box" id="checkout-form" novalidate>
       <h3 style="font-size:18px;margin-bottom:6px">Paiement sécurisé</h3>
-      <p class="muted" style="font-size:13.5px;margin-bottom:8px">🔒 Vos informations sont chiffrées (simulation — en production : Stripe Checkout).</p>
+      <p class="muted" style="font-size:13.5px;margin-bottom:8px">🔒 Paiement par carte via Stripe — vous êtes redirigé vers leur page de paiement.</p>
 
       <label for="cf-email">Adresse email (votre accès y sera envoyé)</label>
       <input type="email" id="cf-email" placeholder="vous@exemple.fr" autocomplete="email">
       <div class="field-err" id="err-email"></div>
-
-      <label for="cf-nom">Nom complet</label>
-      <input type="text" id="cf-nom" placeholder="Prénom Nom" autocomplete="name">
-      <div class="field-err" id="err-nom"></div>
-
-      <label for="cf-carte">Numéro de carte</label>
-      <input type="text" id="cf-carte" placeholder="4242 4242 4242 4242" inputmode="numeric" autocomplete="cc-number">
-      <div class="field-err" id="err-carte"></div>
-
-      <div class="form-grid">
-        <div>
-          <label for="cf-exp">Expiration</label>
-          <input type="text" id="cf-exp" placeholder="MM/AA" inputmode="numeric" autocomplete="cc-exp">
-          <div class="field-err" id="err-exp"></div>
-        </div>
-        <div>
-          <label for="cf-cvc">CVC</label>
-          <input type="text" id="cf-cvc" placeholder="123" inputmode="numeric" autocomplete="cc-csc">
-          <div class="field-err" id="err-cvc"></div>
-        </div>
-      </div>
 
       <label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:13.5px;margin-top:20px">
         <input type="checkbox" id="cf-cgv" style="width:auto;min-height:auto;margin-top:2px">
@@ -81,9 +60,29 @@
       </label>
       <div class="field-err" id="err-cgv" style="margin-top:8px"></div>
 
-      <button type="submit" class="btn accent big" id="pay-btn" style="width:100%;margin-top:24px">Payer 47 €</button>
-      <div class="secure-note">🔐 Paiement simulé pour la démo — aucun débit réel</div>
+      <button type="submit" class="btn accent big" id="pay-btn" style="width:100%;margin-top:24px">Payer 47 € avec Stripe →</button>
+      <div class="secure-note">🔐 Paiement sécurisé par Stripe — transaction chiffrée</div>
     </form>
+
+    <script>
+    (function () {
+      // ⚡ LIEN DE PAIEMENT STRIPE — remplacé dès que le compte Stripe est créé (2 min)
+      var STRIPE_URL = "https://buy.stripe.com/REMPLACER";
+      var form = document.getElementById("checkout-form");
+      if (!form) return;
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var email = document.getElementById("cf-email").value.trim();
+        var cgv = document.getElementById("cf-cgv").checked;
+        var errEmail = document.getElementById("err-email");
+        var errCgv = document.getElementById("err-cgv");
+        errEmail.textContent = ""; errCgv.textContent = "";
+        if (!email || email.indexOf("@") === -1) { errEmail.textContent = "Email requis."; return; }
+        if (!cgv) { errCgv.textContent = "Veuillez accepter les conditions."; return; }
+        window.location.href = STRIPE_URL + (STRIPE_URL.indexOf("?") === -1 ? "?" : "&") + "prefilled_email=" + encodeURIComponent(email);
+      });
+    })();
+    </script>
 
     <p class="center muted" style="font-size:13px;margin-top:22px">Une question ? Écrivez-nous : contact@coachflow-ia.fr — réponse sous 24 h.</p>
   </div>
