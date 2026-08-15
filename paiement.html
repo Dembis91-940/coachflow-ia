@@ -33,27 +33,37 @@
 
     <div class="demo-banner">
       <span>🔒</span>
-      <div><b>Paiement sécurisé.</b> Transaction chiffrée via Stripe, accès immédiat après confirmation, garantie 14 jours.</div>
+      <div><b>Commande confirmée par email.</b> Paiement par virement ou message privé, accès immédiat après réception du paiement, garantie 14 jours.</div>
     </div>
 
     <!-- Récapitulatif de commande -->
     <div class="order-box">
       <h3>Votre commande</h3>
       <div class="order-row"><span>Formation</span><span id="cmd-nom">CoachFlow Essentiel</span></div>
-      <div class="order-row"><span>Prix normal</span><span id="cmd-old" style="text-decoration:line-through">87 €</span></div>
+      <div class="order-row" id="row-old"><span>Prix normal</span><span id="cmd-old" style="text-decoration:line-through">87 €</span></div>
       <div class="order-row"><span>Prix de lancement</span><span id="cmd-prix" style="color:#ff5a1f;font-weight:700">47 €</span></div>
       <div class="order-row"><span>Accès</span><span>Immédiat, à vie</span></div>
       <div class="order-row total"><span>Total</span><span id="cmd-total">47 €</span></div>
     </div>
 
-    <!-- Paiement sécurisé Stripe -->
+    <!-- Commande — confirmation par email -->
     <form class="form-box" id="checkout-form" novalidate>
-      <h3 style="font-size:18px;margin-bottom:6px">Paiement sécurisé</h3>
-      <p class="muted" style="font-size:13.5px;margin-bottom:8px">🔒 Paiement par carte via Stripe — vous êtes redirigé vers leur page de paiement.</p>
+      <h3 style="font-size:18px;margin-bottom:6px">Finaliser ma commande</h3>
+      <p class="muted" style="font-size:13.5px;margin-bottom:8px">📋 Remplissez vos coordonnées : vous recevez une confirmation par email, puis le paiement se fait par virement ou message privé.</p>
+
+      <label for="cf-nom">Votre nom</label>
+      <input type="text" id="cf-nom" placeholder="Ex. : Claire Fontaine" autocomplete="name">
+      <div class="field-err" id="err-nom"></div>
 
       <label for="cf-email">Adresse email (votre accès y sera envoyé)</label>
       <input type="email" id="cf-email" placeholder="vous@exemple.fr" autocomplete="email">
       <div class="field-err" id="err-email"></div>
+
+      <label for="cf-offre">Offre</label>
+      <select id="cf-offre" style="width:100%;min-height:48px;border:1.5px solid var(--line);border-radius:10px;padding:0 14px;font-size:15.5px;background:#fbfbf9;font-family:var(--font-body);color:var(--ink)">
+        <option value="CoachFlow Essentiel — 47 € (paiement unique)" selected>CoachFlow Essentiel — 47 € (paiement unique)</option>
+        <option value="CoachFlow Pro — 97 € (paiement unique)">CoachFlow Pro — 97 € (paiement unique)</option>
+      </select>
 
       <label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:13.5px;margin-top:20px">
         <input type="checkbox" id="cf-cgv" style="width:auto;min-height:auto;margin-top:2px">
@@ -61,26 +71,110 @@
       </label>
       <div class="field-err" id="err-cgv" style="margin-top:8px"></div>
 
-      <button type="submit" class="btn accent big" id="pay-btn" style="width:100%;margin-top:24px">Payer 47 € avec Stripe →</button>
-      <div class="secure-note">🔐 Paiement sécurisé par Stripe — transaction chiffrée</div>
+      <div class="field-err" id="order-err" style="margin-top:10px"></div>
+
+      <button type="submit" class="btn accent big" id="pay-btn" style="width:100%;margin-top:24px">Commander →</button>
+      <div class="secure-note">🔒 Confirmation par email — paiement par virement ou message privé</div>
     </form>
+
+    <!-- Confirmation de commande -->
+    <div class="success-box" id="order-ok" style="display:none">
+      <div class="check">✓</div>
+      <h1>Commande envoyée !</h1>
+      <p style="color:var(--muted);margin-top:10px">Merci <b id="ok-nom"></b> ! Votre commande <b id="ok-offre"></b> est bien enregistrée.</p>
+      <p style="color:var(--muted);margin-top:8px">Vous recevez une <b>confirmation par email</b> à l'adresse indiquée, avec les coordonnées de paiement (virement ou message privé). Votre accès est activé dès réception du paiement.</p>
+      <p class="next">Que se passe-t-il maintenant ?</p>
+      <ul class="access-list">
+        <li>Vous recevez un email de confirmation sous quelques minutes.</li>
+        <li>Nous vous envoyons les coordonnées de paiement (virement ou message privé).</li>
+        <li>Dès réception du paiement, vous recevez votre accès à la formation.</li>
+      </ul>
+    </div>
 
     <script>
     (function () {
-      // ⚡ LIEN DE PAIEMENT STRIPE — remplacé dès que le compte Stripe est créé (2 min)
-      var STRIPE_URL = "https://buy.stripe.com/REMPLACER";
+      // ⚡ Commande réelle via EmailJS — confirmation par email, paiement par virement ou message privé
+      var EMAILJS = {
+        serviceId: "service_cy1ytdb",
+        templateId: "template_xpo58cv",
+        publicKey: "8Pui4ZEqxW2jRVF7h"
+      };
+      var SITE = "CoachFlow IA";
+
+      function chargerEmailJS(callback) {
+        if (window.emailjs) { callback(); return; }
+        var s = document.createElement("script");
+        s.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+        s.onload = function () { try { emailjs.init({ publicKey: EMAILJS.publicKey }); } catch (e) {} callback(); };
+        s.onerror = function () { callback(); };
+        document.head.appendChild(s);
+      }
+
+      function envoyerCommande(donnees, onOk, onErr) {
+        chargerEmailJS(function () {
+          if (!window.emailjs) {
+            onErr("Le service d'envoi est momentanément indisponible. Réessayez dans quelques instants, ou écrivez-nous à agentiadeploiement@gmail.com.");
+            return;
+          }
+          emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, {
+            site: SITE,
+            name: donnees.nom,
+            email: donnees.email,
+            question: "Commande CoachFlow IA : " + donnees.offre + ". Confirmation et coordonnées de paiement à envoyer."
+          }).then(onOk, function () {
+            onErr("L'envoi a échoué. Vérifiez votre connexion puis réessayez, ou écrivez-nous à agentiadeploiement@gmail.com.");
+          });
+        });
+      }
+
       var form = document.getElementById("checkout-form");
       if (!form) return;
+
+      /* Mise à jour du récapitulatif selon l'offre choisie */
+      var offreEl = document.getElementById("cf-offre");
+      function majRecap() {
+        var pro = offreEl.value.indexOf("Pro") !== -1;
+        document.getElementById("cmd-nom").textContent = pro ? "CoachFlow Pro" : "CoachFlow Essentiel";
+        document.getElementById("cmd-prix").textContent = pro ? "97 €" : "47 €";
+        document.getElementById("cmd-total").textContent = pro ? "97 €" : "47 €";
+        document.getElementById("row-old").style.display = pro ? "none" : "flex";
+      }
+      var m = /[?&]formule=([^&]*)/.exec(location.search);
+      if (m && m[1] === "pro") { offreEl.value = "CoachFlow Pro — 97 € (paiement unique)"; }
+      majRecap();
+      offreEl.addEventListener("change", majRecap);
+
       form.addEventListener("submit", function (e) {
         e.preventDefault();
+        var nom = document.getElementById("cf-nom").value.trim();
         var email = document.getElementById("cf-email").value.trim();
+        var offre = offreEl.value;
         var cgv = document.getElementById("cf-cgv").checked;
+        var errNom = document.getElementById("err-nom");
         var errEmail = document.getElementById("err-email");
         var errCgv = document.getElementById("err-cgv");
-        errEmail.textContent = ""; errCgv.textContent = "";
-        if (!email || email.indexOf("@") === -1) { errEmail.textContent = "Email requis."; return; }
-        if (!cgv) { errCgv.textContent = "Veuillez accepter les conditions."; return; }
-        window.location.href = STRIPE_URL + (STRIPE_URL.indexOf("?") === -1 ? "?" : "&") + "prefilled_email=" + encodeURIComponent(email);
+        var errGlobal = document.getElementById("order-err");
+        [errNom, errEmail, errCgv].forEach(function (el) { el.textContent = ""; el.classList.remove("show"); });
+        errGlobal.textContent = ""; errGlobal.classList.remove("show");
+        if (nom.length < 2) { errNom.textContent = "Indiquez votre nom (2 caractères minimum)."; errNom.classList.add("show"); return; }
+        if (!email || email.indexOf("@") === -1) { errEmail.textContent = "Adresse email invalide."; errEmail.classList.add("show"); return; }
+        if (!cgv) { errCgv.textContent = "Veuillez accepter les conditions."; errCgv.classList.add("show"); return; }
+
+        var btn = document.getElementById("pay-btn");
+        btn.disabled = true;
+        btn.textContent = "Envoi en cours…";
+        envoyerCommande({ nom: nom, email: email, offre: offre }, function () {
+          form.style.display = "none";
+          document.getElementById("ok-nom").textContent = nom;
+          document.getElementById("ok-offre").textContent = offre;
+          document.getElementById("order-ok").style.display = "block";
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }, function (msg) {
+          btn.disabled = false;
+          btn.textContent = "Commander →";
+          errGlobal.textContent = msg;
+          errGlobal.classList.add("show");
+        });
       });
     })();
     </script>
