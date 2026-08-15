@@ -275,6 +275,25 @@
     }
   }
 
+  /* ---------- Animation au scroll (reveal) ---------- */
+  function initReveal() {
+    var els = document.querySelectorAll(".reveal");
+    if (!els.length) return;
+    if (!("IntersectionObserver" in window)) {
+      for (var i = 0; i < els.length; i++) els[i].classList.add("visible");
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      for (var j = 0; j < entries.length; j++) {
+        if (entries[j].isIntersecting) {
+          entries[j].target.classList.add("visible");
+          io.unobserve(entries[j].target);
+        }
+      }
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    for (var k = 0; k < els.length; k++) io.observe(els[k]);
+  }
+
   /* ---------- Init ---------- */
   function init() {
     tickCountdown();
@@ -284,6 +303,7 @@
     initCheckout();
     initMerci();
     initGate();
+    initReveal();
   }
 
   if (document.readyState === "loading") {

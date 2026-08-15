@@ -254,4 +254,12 @@ input.invalid{border-color:#d64545}
 .countdown{display:inline-flex;gap:10px;align-items:center;font-family:var(--font-head);font-weight:700;color:var(--accent)}
 .countdown .unit{background:var(--paper-2);border-radius:10px;padding:8px 12px;font-size:18px;min-width:44px;text-align:center}
 .countdown .sep{color:var(--muted)}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* ---------- Animations au scroll (reveal) ---------- */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease;will-change:opacity,transform}
+.reveal.visible{opacity:1;transform:none}
+.cards .reveal:nth-child(2){transition-delay:.07s}
+.cards .reveal:nth-child(3){transition-delay:.14s}
+.plans .reveal:nth-child(2){transition-delay:.1s}
+@media print{.reveal{opacity:1 !important;transform:none !important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}}
