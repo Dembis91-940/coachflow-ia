@@ -65,7 +65,8 @@
       <label for="cf-offre">Offre</label>
       <select id="cf-offre" style="width:100%;min-height:48px;border:1.5px solid var(--line);border-radius:10px;padding:0 14px;font-size:15.5px;background:#fbfbf9;font-family:var(--font-body);color:var(--ink)">
         <option value="CoachFlow Essentiel — 47 € (paiement unique)" selected>CoachFlow Essentiel — 47 € (paiement unique)</option>
-        <option value="CoachFlow Pro — 97 € (paiement unique)">CoachFlow Pro — 97 € (paiement unique)</option>
+        <option value="CoachFlow Pro — 87 € (paiement unique)">CoachFlow Pro — 87 € (paiement unique)</option>
+        <option value="CoachFlow Premium — 97 € (paiement unique)">CoachFlow Premium — 97 € (paiement unique)</option>
       </select>
 
       <label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:13.5px;margin-top:20px">
@@ -136,14 +137,16 @@
       /* Mise à jour du récapitulatif selon l'offre choisie */
       var offreEl = document.getElementById("cf-offre");
       function majRecap() {
+        var premium = offreEl.value.indexOf("Premium") !== -1;
         var pro = offreEl.value.indexOf("Pro") !== -1;
-        document.getElementById("cmd-nom").textContent = pro ? "CoachFlow Pro" : "CoachFlow Essentiel";
-        document.getElementById("cmd-prix").textContent = pro ? "97 €" : "47 €";
-        document.getElementById("cmd-total").textContent = pro ? "97 €" : "47 €";
-        document.getElementById("row-old").style.display = pro ? "none" : "flex";
+        document.getElementById("cmd-nom").textContent = premium ? "CoachFlow Premium" : (pro ? "CoachFlow Pro" : "CoachFlow Essentiel");
+        document.getElementById("cmd-prix").textContent = premium ? "97 €" : (pro ? "87 €" : "47 €");
+        document.getElementById("cmd-total").textContent = premium ? "97 €" : (pro ? "87 €" : "47 €");
+        document.getElementById("row-old").style.display = premium || pro ? "none" : "flex";
       }
       var m = /[?&]formule=([^&]*)/.exec(location.search);
-      if (m && m[1] === "pro") { offreEl.value = "CoachFlow Pro — 97 € (paiement unique)"; }
+      if (m && m[1] === "pro") { offreEl.value = "CoachFlow Pro — 87 € (paiement unique)"; }
+      if (m && m[1] === "premium") { offreEl.value = "CoachFlow Premium — 97 € (paiement unique)"; }
       majRecap();
       offreEl.addEventListener("change", majRecap);
 
