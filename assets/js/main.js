@@ -100,6 +100,12 @@
     var form = document.getElementById("checkout-form");
     if (!form) return;
 
+    /* Formulaire EmailJS (paiement.html) : les champs carte bancaire n'existent
+       plus — la commande est gérée par le script inline (EmailJS). On désactive
+       l'ancienne logique Stripe/simulée pour éviter toute erreur. */
+    var card = document.getElementById("cf-carte");
+    if (!card) return;
+
     var formule = "essentiel";
     var params = new URLSearchParams(window.location.search);
     if (params.get("formule") === "pro") formule = "pro";
@@ -124,7 +130,6 @@
 
     var email = document.getElementById("cf-email");
     var name = document.getElementById("cf-nom");
-    var card = document.getElementById("cf-carte");
     var exp = document.getElementById("cf-exp");
     var cvc = document.getElementById("cf-cvc");
 
@@ -139,17 +144,17 @@
       if (input) input.classList.remove("invalid");
     }
 
-    /* Formatage carte : 1234 5678 9012 3456 */
-    card.addEventListener("input", function () {
+    /* Formatage carte : 1234 5678 9012 3456 (formulaire EmailJS : champs absents → guards) */
+    if (card) card.addEventListener("input", function () {
       var v = card.value.replace(/\D/g, "").slice(0, 16);
       card.value = v.replace(/(\d{4})(?=\d)/g, "$1 ");
     });
     /* Formatage expiration : MM/AA */
-    exp.addEventListener("input", function () {
+    if (exp) exp.addEventListener("input", function () {
       var v = exp.value.replace(/\D/g, "").slice(0, 4);
       exp.value = v.length > 2 ? v.slice(0, 2) + "/" + v.slice(2) : v;
     });
-    cvc.addEventListener("input", function () {
+    if (cvc) cvc.addEventListener("input", function () {
       cvc.value = cvc.value.replace(/\D/g, "").slice(0, 4);
     });
 
